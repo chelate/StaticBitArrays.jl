@@ -1,0 +1,7 @@
+name = "SBitArrays"
+uuid = "a5f81324-e4c8-4c83-be36-f7734ba98a1b"
+authors = ["Colin LaMont <colinharrylamont@gmail.com>"]
+version = "0.1.0"
+
+[deps]
+StaticArrays = "90137ffa-7385-5640-81b9-e52037218182"
