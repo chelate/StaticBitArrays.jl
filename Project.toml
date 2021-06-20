@@ -1,4 +1,4 @@
-name = "SBitArrays"
+name = "StaticBitArrays"
 uuid = "a5f81324-e4c8-4c83-be36-f7734ba98a1b"
 authors = ["Colin LaMont <colinharrylamont@gmail.com>"]
 version = "0.1.0"
