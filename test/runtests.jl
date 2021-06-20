@@ -1,4 +1,4 @@
-using SBitArrays
+using StaticBitArrays
 using StaticArrays
 using Test
 

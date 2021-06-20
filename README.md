@@ -31,7 +31,7 @@ In  Ecology or Genetics,
 ```
 If the number of types are small
     then I can keep track of the population state with a set of integer vectors,
-    indicating the population size for each indvidual.
+    indicating the population size for each type.
 ```
     [n1, n2, ... nN]
 ```

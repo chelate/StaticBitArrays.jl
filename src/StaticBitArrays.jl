@@ -1,4 +1,4 @@
-module SBitArrays
+module StaticBitArrays
 
 using StaticArrays
 const SA = StaticArrays
