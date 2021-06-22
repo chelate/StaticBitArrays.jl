@@ -4,6 +4,17 @@ using ProfileVega
 using StaticArrays
 using StaticBitArrays
 
+# Basic construction
+
+# This should compile away completely
+@btime SBitVector{70}(SVector{2, UInt64}(3, 31));
+
+# These should be real fast
+a = rand(Bool, 64)
+t = Tuple(a)
+@btime sbv = SBitVector{64}($t); # fast, just the cost of << ?
+@btime sbv = SBitVector{64}($a); # also fast
+
 # The goal here is to find the fastest way to construct a population
 function make_population(::Type{T}, x::SVector{L}, N) where {L,T}
     M = cld(L,sizeof(T)*8)
@@ -15,6 +26,7 @@ function make_population(::Type{T}, x::SVector{L}, N) where {L,T}
 end
 
 ## Tests 
+
 x = @SVector rand(100) # initial population frequencies
 @time out = make_population(UInt8, x, 10^6)
 @code_warntype  make_population(UInt8, x, 10^3)
