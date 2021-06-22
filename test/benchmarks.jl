@@ -12,8 +12,14 @@ using StaticBitArrays
 # These should be real fast
 a = rand(Bool, 64)
 t = Tuple(a)
-@btime sbv = SBitVector{64}($t); # fast, just the cost of << ?
-@btime sbv = SBitVector{64}($a); # also fast
+@btime SBitVector{64}($t); # fast, just the cost of << ?
+@btime SBitVector{64}($a); # also fast
+
+# indexing is also fast
+bv = SBitVector{64}(UInt32, a);
+@btime $bv[Ref(10)[]] # Ref stops it compiling away
+@btime map(x -> !x, Ref($bv)[]) # This should return a StaticBitVector
+@btime map(x -> 2x, Ref($bv)[])
 
 # The goal here is to find the fastest way to construct a population
 function make_population(::Type{T}, x::SVector{L}, N) where {L,T}

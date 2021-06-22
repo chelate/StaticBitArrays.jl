@@ -10,11 +10,12 @@ rbv = rand(Bool, 128)
 rbm = rand(Bool, 16, 16)
 rba = rand(Bool, 16, 16, 16)
 
-T = UInt64
+T = UInt8
 for T in [UInt8,UInt16,UInt32,UInt64] # works for all UInts
     bv = SBitVector{128}(T, rbv);
     @test bv isa AbstractVector
     @test bv[1] == rbv[1]
+    @test bv[end] == rbv[end]
     @test all(rbv .== bv)
 
     bm = SBitMatrix{16,16}(T, rbm);

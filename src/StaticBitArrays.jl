@@ -44,9 +44,14 @@ SBitArray{S}(a::AbstractArray{Bool}) where {S} = SBitArray{S}(UInt64, a)
 
 Base.size(::SBitArray{S,M}) where {S,M} = S
 Base.IndexStyle(::Type{<:SBitArray}) = IndexLinear()
-Base.getindex(s::SBitArray{S,M,T}, ind::Int) where {S,M,T} = @inbounds readbit_mod(s.chunks[cld(ind, nbits(T))], ind)
-# moded version of readbit
-readbit_mod(x::T, loc::Int) where {T<:Unsigned} = (x >> (mod1(loc, nbits(T)) - 1)) & one(T) == one(T)
+Base.@propagate_inbounds function Base.getindex(s::SBitArray{<:Any,<:Any,T}, ind::Int) where T 
+    readbit(s.chunks[nchunks(T, ind)], ind)
+end
+function readbit(chunk::T, i::Int) where T
+    shift = UInt(i - 1) & (UInt(nbits(T)) - one(UInt))
+    mask = one(T) << shift 
+    (chunk & mask) >> shift |> Bool
+end
 
 nchunks(T, l) = cld(l, nbits(T))
 nbits(T) = sizeof(T) * 8
@@ -58,14 +63,14 @@ function Base.iterate(s::SBitArray{S,M,T}, state=(1, s.chunks[1])) where {S,M,T}
     if ind > L
         nothing
     else
-        return @inbounds (readbit_mod(val, ind), 
+        return @inbounds (readbit(val, ind), 
             (ind+1, mod1(ind, nbits(T)) == 1 ? S.chunks[nchunks(T, ind)] : val))
     end
 end
 
 function dot(a::SBitArray, b::AbstractVector{T}) where T
     s = zero(T)
-    for (bool,val) in zip(a,b)
+    for (bool, val) in zip(a, b)
         if bool 
             s += val
         end
