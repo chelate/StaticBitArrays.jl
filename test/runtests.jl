@@ -6,28 +6,24 @@ v = SBitVector{70}(SVector{2, UInt64}(3, 31));
 a = SBitArray{Tuple{70}}(SVector{2, UInt64}(3, 31));
 @test v === a
 
-T = UInt8
-l = 7
-for T in [UInt8,UInt16,UInt32,UInt64], l in (1, 2, 7, 8)
-    rbv = rand(Bool, l)
-    rbm = rand(Bool, l, l)
-    rba = rand(Bool, l, l, l)
+rbv = rand(Bool, 100)
+rbm = rand(Bool, 10, 10)
+rba = rand(Bool, 10, 10, 10)
 
-    bv = SBitVector{l}(T, rbv);
+T = UInt64
+for T in [UInt8,UInt16,UInt32,UInt64] # works for all UInts
+    bv = SBitVector{100}(T, rbv);
     @test bv isa AbstractVector
-    @test bv[l] == rbv[l]
-    @test bv[end] == rbv[end]
+    @test bv[1] == rbv[1]
     @test all(rbv .== bv)
 
-    bm = SBitMatrix{l,l}(T, rbm);
+    bm = SBitMatrix{10,10}(T, rbm);
     @test bm isa AbstractMatrix
-    @test bm[l, l] == rbm[l, l]
+    @test bm[1, 2] == rbm[1, 2]
     @test all(rbm .== bm)
 
-    ba = SBitArray{Tuple{l,l,l}}(T, rba);
+    ba = SBitArray{Tuple{10,10,10}}(T, rba);
     @test ba isa AbstractArray{Bool,3}
-    @test ba[l, l, l] == rba[l, l, l]
+    @test ba[1, 2, 3] == rba[1, 2, 3]
     @test all(rba .== ba)
 end
-
-nothing
