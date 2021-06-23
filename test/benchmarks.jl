@@ -7,13 +7,14 @@ using StaticBitArrays
 # Basic construction
 
 # This should compile away completely
+@btime SBitVector{64}(SVector{1, UInt64}(1));
 @btime SBitVector{70}(SVector{2, UInt64}(3, 31));
 
 # These should be real fast
 a = rand(Bool, 64)
 t = Tuple(a)
-@btime SBitVector{64}($t); # fast, just the cost of << ?
-@btime SBitVector{64}($a); # also fast
+@btime SBitVector{64}(Ref($t)[]); # fast
+@btime SBitVector{64}(Ref($a)[]); # also fast
 
 # indexing is also fast
 bv = SBitVector{64}(UInt32, a);
